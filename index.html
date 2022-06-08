@@ -1,0 +1,139 @@
+<html>
+
+<head>
+    <style>
+        #textbox {
+            background-color: yellow;
+            color: blue;
+        }
+
+        #btn {
+            background-color: aqua;
+            color: brown;
+            border: none;
+            border-radius: 12px;
+
+        }
+
+        #oral {
+            background-color: pink;
+            color: black;
+
+        }
+
+        body {
+            background-color: antiquewhite;
+            width: fit-content;
+            height: 500px;
+        }
+
+        #rmv {
+            background-color: skyblue;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .complete {
+            text-decoration: line-through;
+        }
+        #saveme {
+            background-color:palegoldenrod;
+            color: brown;
+            border: radius;
+        }
+        #delme{
+            background-color: greenyellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="result">
+        <input type="text" id="textbox" placeholder="To Do List">
+        <button id="btn">Add</button>
+        <div id="myDiv">
+            <ol id="oral">
+            </ol>
+            <button id="rmv" onclick="removeItem()">clear completed</button>
+            <button id="clear" onclick="clearAll()">Clear all</button>
+            <button onclick="save()" id="saveme">Save List</button>
+            <button onclick="del()" id="delme">delete storage</button>
+        </div>
+    </div>
+    <script>
+        let addButton = document.getElementById("btn")
+        let todoContainer = document.getElementById("result")
+        let inputField = document.getElementById("textbox")
+        let ol = document.getElementById('oral')
+        let remove = document.getElementById('myDiv')
+
+        addButton.addEventListener("click", function () {
+            const paragraph = document.createElement('p');
+
+            const li = document.createElement('li');
+            const newtext = document.createTextNode(inputField.value)
+
+            li.appendChild(newtext)
+            ol.appendChild(li)
+            todoContainer.appendChild(paragraph);
+            inputField.value = "";
+            li.addEventListener("click", function () {
+                if (li.classList.contains('complete')) {
+                    li.classList.remove('complete')
+                }
+                else {
+                    li.classList.add('complete')
+                }
+            })
+        })
+        function removeItem() {
+            let ol = document.getElementById('oral')
+            let complete = ol.getElementsByClassName('complete')
+            while (complete.length > 0) {
+                complete.item(0).remove()
+            }
+        }
+        function clearAll() {
+            let oral = document.getElementById('oral')
+            while (oral.children.length > 0) {
+                oral.children.item(0).remove()
+            }
+        }
+        function save() {
+            let array = []
+            for (let i = 0; i < ol.children.length; i++) {
+                let toDo = ol.children.item(i)
+                console.log(toDo.innerHTML)
+                var obj = {
+                    name: toDo.innerHTML
+                }
+                array.push(obj)
+            }
+            localStorage.setItem('Didi', JSON.stringify(array))
+
+        }
+        function loadlist() {
+            
+            if (localStorage.getItem("Didi")){
+
+                let todo = JSON.parse(localStorage.getItem("Didi"))
+    
+                for (let i = 0; i < todo.length; i++) {
+                    const li = document.createElement('li');
+                    const newtext = document.createTextNode(todo[i].name)
+    
+                    li.appendChild(newtext)
+                    ol.appendChild(li)
+                }
+            }
+        }
+        function del(){
+            localStorage.clear()
+            window.location.reload()
+        }
+        
+        loadlist()
+    </script>
+</body>
+
+</html>
